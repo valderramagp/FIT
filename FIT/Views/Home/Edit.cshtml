@@ -1,0 +1,114 @@
+﻿@model FIT.Models.Corredor
+@using FIT.Models;
+@{
+    ViewBag.Title = "Editar Corredor";
+    var selected = "";
+    List<Carrera> carreras = ViewBag.Carreras;
+}
+
+<h2>Editar Corredor</h2>
+
+
+@using (Html.BeginForm("Modificar", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Folio)
+
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <label for="Nombres" class="control-label col-md-2">Nombres</label>
+                <div class="col-md-10">
+                    <input type="text" name="Nombres" class="form-control" required value="@Model.Nombres" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Paterno" class="control-label col-md-2">Apellido Paterno</label>
+                <div class="col-md-10">
+                    <input type="text" name="Paterno" class="form-control" required value="@Model.Paterno"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Materno" class="control-label col-md-2">Apellido Materno</label>
+                <div class="col-md-10">
+                    <input type="text" name="Materno" class="form-control" value="@Model.Materno" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento" class="control-label col-md-2">Fecha de Nacimiento</label>
+                <div class="col-md-10">
+                    <input type="date" name="FechaNacimiento" class="form-control" required value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Telefono" class="control-label col-md-2">Telefono</label>
+                <div class="col-md-10">
+                    <input type="text" name="Telefono" class="form-control" value="@Model.Telefono" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <label for="Celular" class="control-label col-md-2">Celular</label>
+                <div class="col-md-10">
+                    <input type="text" name="Celular" class="form-control" value="@Model.Celular"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Correo" class="control-label col-md-2">Correo</label>
+                <div class="col-md-10">
+                    <input type="email" name="Correo" class="form-control" required value="@Model.Correo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Sexo" class="control-label col-md-2">Sexo</label>
+                <div class="col-md-10">
+                    <select name="Sexo" class="form-control" required>
+                        @{ selected = Model.Sexo.Equals("H") ? "selected" : ""; }
+                        <option value="H" @selected>Hombre</option>
+                        @{ selected = Model.Sexo.Equals("M") ? "selected" : ""; }
+                        <option value="M" @selected>Mujer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Talla" class="control-label col-md-2">Talla</label>
+                <div class="col-md-10">
+                    <select name="Talla" class="form-control" required>
+                        @{ selected = Model.Talla.Equals("S ") ? "selected" : ""; }
+                        <option value="S" @selected>Chica</option>
+                        @{ selected = Model.Talla.Equals("M ") ? "selected" : ""; }
+                        <option value="M" @selected>Mediana</option>
+                        @{ selected = Model.Talla.Equals("G ") ? "selected" : ""; }
+                        <option value="G" @selected>Grande</option>
+                        @{ selected = Model.Talla.Equals("XL") ? "selected" : ""; }
+                        <option value="XL" @selected>Extra Grande</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="IdCarrera" class="control-label col-md-2">Carrera</label>
+                <div class="col-md-10">
+                    <select name="IdCarrera" required class="form-control">
+                        @foreach(var item in carreras)
+                        {
+                            selected = Model.IdCarrera == item.IdCarrera ? "selected" : "";
+                            <option value="@item.IdCarrera" @selected>@item.Descripcion</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <input type="submit" class="btn btn-primary" value="Guardar" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Regresar al menú principal", "Index")
+</div>

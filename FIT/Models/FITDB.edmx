@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FITModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Carrera">
+          <Key>
+            <PropertyRef Name="IdCarrera" />
+          </Key>
+          <Property Name="IdCarrera" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Corredor">
+          <Key>
+            <PropertyRef Name="Folio" />
+          </Key>
+          <Property Name="Folio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Paterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Materno" Type="varchar" MaxLength="50" />
+          <Property Name="FechaNacimiento" Type="date" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="10" />
+          <Property Name="Celular" Type="varchar" MaxLength="10" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sexo" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Talla" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="IdCarrera" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="Voluntarios">
+          <Key>
+            <PropertyRef Name="IdVoluntario" />
+            <PropertyRef Name="Nombre" />
+            <PropertyRef Name="APaterno" />
+            <PropertyRef Name="Eventos" />
+          </Key>
+          <Property Name="IdVoluntario" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="APaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AMaterno" Type="varchar" MaxLength="50" />
+          <Property Name="Mail" Type="varchar" MaxLength="50" />
+          <Property Name="Telefono" Type="varchar" MaxLength="10" />
+          <Property Name="Celular" Type="varchar" MaxLength="10" />
+          <Property Name="Eventos" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Corredor_Carrera">
+          <End Role="Carrera" Type="Self.Carrera" Multiplicity="1" />
+          <End Role="Corredor" Type="Self.Corredor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carrera">
+              <PropertyRef Name="IdCarrera" />
+            </Principal>
+            <Dependent Role="Corredor">
+              <PropertyRef Name="IdCarrera" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FITModelStoreContainer">
+          <EntitySet Name="Carrera" EntityType="Self.Carrera" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Corredor" EntityType="Self.Corredor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Voluntarios" EntityType="Self.Voluntarios" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Voluntarios].[IdVoluntario] AS [IdVoluntario], 
+    [Voluntarios].[Nombre] AS [Nombre], 
+    [Voluntarios].[APaterno] AS [APaterno], 
+    [Voluntarios].[AMaterno] AS [AMaterno], 
+    [Voluntarios].[Mail] AS [Mail], 
+    [Voluntarios].[Telefono] AS [Telefono], 
+    [Voluntarios].[Celular] AS [Celular], 
+    [Voluntarios].[Eventos] AS [Eventos]
+    FROM [dbo].[Voluntarios] AS [Voluntarios]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Corredor_Carrera" Association="Self.FK_Corredor_Carrera">
+            <End Role="Carrera" EntitySet="Carrera" />
+            <End Role="Corredor" EntitySet="Corredor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FITModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FITEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Usuarios" EntityType="FITModel.Usuarios" />
+          <EntitySet Name="Carrera" EntityType="FITModel.Carrera" />
+          <EntitySet Name="Corredor" EntityType="FITModel.Corredor" />
+          <AssociationSet Name="FK_Corredor_Carrera" Association="FITModel.FK_Corredor_Carrera">
+            <End Role="Carrera" EntitySet="Carrera" />
+            <End Role="Corredor" EntitySet="Corredor" />
+          </AssociationSet>
+          <EntitySet Name="Voluntarios" EntityType="FITModel.Voluntarios" />
+        </EntityContainer>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Carrera">
+          <Key>
+            <PropertyRef Name="IdCarrera" />
+          </Key>
+          <Property Name="IdCarrera" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Corredor" Relationship="FITModel.FK_Corredor_Carrera" FromRole="Carrera" ToRole="Corredor" />
+        </EntityType>
+        <EntityType Name="Corredor">
+          <Key>
+            <PropertyRef Name="Folio" />
+          </Key>
+          <Property Name="Folio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Paterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Materno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Celular" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Sexo" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Talla" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="IdCarrera" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Carrera" Relationship="FITModel.FK_Corredor_Carrera" FromRole="Corredor" ToRole="Carrera" />
+        </EntityType>
+        <Association Name="FK_Corredor_Carrera">
+          <End Type="FITModel.Carrera" Role="Carrera" Multiplicity="1" />
+          <End Type="FITModel.Corredor" Role="Corredor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carrera">
+              <PropertyRef Name="IdCarrera" />
+            </Principal>
+            <Dependent Role="Corredor">
+              <PropertyRef Name="IdCarrera" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Voluntarios">
+          <Key>
+            <PropertyRef Name="IdVoluntario" />
+            <PropertyRef Name="Nombre" />
+            <PropertyRef Name="APaterno" />
+            <PropertyRef Name="Eventos" />
+          </Key>
+          <Property Name="IdVoluntario" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="APaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Celular" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Eventos" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FITModelStoreContainer" CdmEntityContainer="FITEntities">
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="FITModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Carrera">
+            <EntityTypeMapping TypeName="FITModel.Carrera">
+              <MappingFragment StoreEntitySet="Carrera">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Corredor">
+            <EntityTypeMapping TypeName="FITModel.Corredor">
+              <MappingFragment StoreEntitySet="Corredor">
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="Talla" ColumnName="Talla" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Materno" ColumnName="Materno" />
+                <ScalarProperty Name="Paterno" ColumnName="Paterno" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Folio" ColumnName="Folio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Voluntarios">
+            <EntityTypeMapping TypeName="FITModel.Voluntarios">
+              <MappingFragment StoreEntitySet="Voluntarios">
+                <ScalarProperty Name="Eventos" ColumnName="Eventos" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="AMaterno" ColumnName="AMaterno" />
+                <ScalarProperty Name="APaterno" ColumnName="APaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdVoluntario" ColumnName="IdVoluntario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,52 @@
+﻿@model FIT.ViewModels.Login
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FIT</title>
+    <link type="text/css" rel="stylesheet" href="~/Content/bootstrap.slate.css" />
+    <link type="text/css" rel="stylesheet" href="~/Content/login.css" />
+</head>
+<body>
+    <div class="container">
+        <div id="divLogo">
+            <img src="~/Images/pic04.png" id="logo" />
+        </div>
+        @using (Ajax.BeginForm("LogIn", "Acceso", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { }))
+        {
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="Username">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input type="text" name="Username" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input type="password" name="Password" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Iniciar Sesión</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="~/scripts/jquery-2.2.4.min.js"></script>
+    <script src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/scripts/login.js"></script>
+</body>
+</html>
