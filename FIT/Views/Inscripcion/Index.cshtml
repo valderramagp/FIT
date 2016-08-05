@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Inscripciones";
+    ViewBag.Header = "Registro de Competidores";
+    Layout = "~/Views/Shared/_LayoutInscripciones.cshtml";
+}
+
+
+<div class="container body-content" id="datos">
+    @using (Ajax.BeginForm("Inscribir", "Inscripcion", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+    {
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label for="numPartipantes">Elige el número de participantes</label>
+                    <select name="numParticipantes" id="numParticipantes" class="form-control">
+                        @for (int i = 1; i < 11; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+            <div id="datosCompetidor">
+                @{Html.RenderAction("DatosCompetidor", "Inscripcion");}
+            </div>
+            <div class="extra">
+                <div class="row text-left">
+
+                </div>
+            </div>
+            <div class="extra">
+                <div class="row">
+                    <label class="pull-left">
+                        <input type="checkbox" id="btnAccept" />
+                        <a data-toggle="modal" data-target="#aviso-privacidad">
+                            He leído y acepto las condiciones del aviso de privacidad.
+                        </a>
+                    </label>
+                    <button type="submit" id="btnSubmit" class="btn btn-primary pull-right" disabled>Registrar</button>
+                </div>
+            </div>
+
+            <div class="modal fade" id="aviso-privacidad" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Aviso de Privacidad</h4>
+                        </div>
+                        <div class="modal-body">
+                            <section>
+                                <p>
+                                    De acuerdo a lo Previsto en la “Ley Federal de Protección de Datos Personales”, declara Generación 316 A.R., ser una empresa legalmente constituida de conformidad con las leyes mexicanas, con domicilio en Nicolas San Juan 1531, Colonia del Valle en México, D.F.; y como responsable del tratamiento de sus datos personales, hace de su conocimiento que la información de nuestros clientes es tratada de forma estrictamente confidencial por lo que al proporcionar sus datos personales, tales como: <br><br>
+
+                                    1.     Nombre.<br>
+                                    2.    Fecha de Nacimiento.<br>
+                                    3.     Teléfonos de Oficina y móviles<br>
+                                    4.     Correo Electrónico.<br><br>
+
+                                    Estos serán utilizados única y exclusivamente para los siguientes fines: <br><br>
+
+
+                                    1.     Información y Prestación de Servicios.<br>
+                                    2.     Actualización de la Base de Datos.<br>
+                                    3.     Cualquier finalidad análoga o compatible con las anteriores.<br><br>
+
+                                    Para prevenir el acceso no autorizado a sus datos personales y con el fin de  asegurar que la información sea utilizada para los fines establecidos en este aviso de privacidad, hemos establecido diversos procedimientos con la finalidad de evitar el uso o divulgación no autorizados de sus datos, permitiéndonos tratarlos debidamente.  Así mismo, le informamos que sus datos personales pueden ser Transmitidos para ser tratados por personas distintas a esta empresa.   Todos sus datos personales son tratados de acuerdo a la legislación aplicable y vigente en el país, por ello le informamos que usted tiene en todo momento los derechos (ARCO) de acceder, rectificar, cancelar u oponerse al tratamiento que le damos a sus datos personales; derecho que podrá hacer valer a través del Área de Privacidad encargada de la seguridad de datos personales en el Teléfono 2451.4070.<br><br>
+
+                                    A través de estos canales usted podrá actualizar sus datos y especificar el medio por el cual desea recibir información, ya que en caso de no contar con esta especificación de su parte, Generación 316 A.R., establecerá libremente el canal que considere pertinente para enviarle información.  Este aviso de privacidad podrá ser modificado por Generación 316 A.R., dichas modificaciones serán oportunamente informadas a través de correo electrónico, teléfono, página web o cualquier otro medio de comunicación que Generación 316 A.R., determine para tal efecto.
+                                </p>
+                            </section>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnPrivacidad">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    }
+</div>
+
+<div class="hidden">
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" id="paypalForm">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="quantity" value="1" id="total">
+        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+        <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_paynow_SM.gif" border="0" name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
+        <img alt="" border="0" src="https://www.paypalobjects.com/es_XC/i/scr/pixel.gif" width="1" height="1">
+    </form>
+</div>
+
+<script src="~/scripts/jquery-2.2.4.min.js"></script>
+<script src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/scripts/bootstrap.min.js"></script>
+<script>
+        var $numCompetidores = $("#numParticipantes");
+        var $divDatosCompetidor = $("#datosCompetidor");
+        var $btnSubmit = $("#btnSubmit");
+        var $checkPrivacidad = $("#btnAccept");
+        var $aviso = $("#aviso-privacidad");
+        var $btnPrivacidad = $("#btnPrivacidad");
+        var $paypal = $("#paypalForm");
+        var $total = $("#total");
+
+        $(document).ready(function () {
+            $numCompetidores.on("change", function () {
+                var $numCompetidores = $(this).val();
+                $total.val($numCompetidores);
+                $.ajax({
+                    url: "DatosCompetidor",
+                    method: "GET",
+                    data: {
+                        numCorredores: $numCompetidores
+                    }
+                }).done(function (data) {
+                    $divDatosCompetidor.html(data);
+                });
+            });
+
+            $checkPrivacidad.change(function () {
+                if ($(this).prop("checked")) {
+                    $btnSubmit.prop("disabled", false);
+                }
+                else {
+                    $btnSubmit.prop("disabled", true);
+                }
+            });
+
+            $btnPrivacidad.click(function () {
+                $checkPrivacidad.prop("checked", true);
+                $aviso.modal("hide");
+            });
+        });
+
+        function OnSuccess() {
+            $aviso.modal("hide");
+            alert("En un momento se le redigirá al portal de paypal para realizar su pago!");
+            $paypal.submit();
+            
+        }
+
+        function OnFailure() {
+            alert("Ocurrió un error inesperado!");
+        }
+</script>

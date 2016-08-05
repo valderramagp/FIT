@@ -133,10 +133,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.slate.css" />
     <Content Include="Content\bootstrap.slate.min.css" />
+    <Content Include="Content\Inscripcion.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\back-black.jpg" />
     <Content Include="Images\pic04.png" />
     <Content Include="Models\FITDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -158,9 +160,9 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Properties\PublishProfiles\G316POLANCOFIT - Web Deploy.pubxml" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\carrerafit - Web Deploy.pubxml" />
     <None Include="scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="scripts\jquery-2.2.4.js" />
     <Content Include="scripts\jquery-2.2.4.min.js" />
@@ -238,6 +240,11 @@
     <Content Include="Views\Home\Temp.cshtml" />
     <Content Include="Views\Home\Edit.cshtml" />
     <Content Include="Views\Acceso\Index.cshtml" />
+    <Content Include="Views\Inscripcion\DatosCompetidor.cshtml" />
+    <Content Include="Views\Shared\_LayoutInscripciones.cshtml" />
+    <Content Include="Views\Inscripcion\Index.cshtml" />
+    <Content Include="Views\Inscripcion\Confirmation.cshtml" />
+    <Content Include="Views\Inscripcion\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -247,7 +254,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Inscripcion\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

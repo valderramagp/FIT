@@ -37,12 +37,16 @@ namespace FIT.Filters
         public static void IniciarSesion(string nombreUsuario, string idUsuario)
         {
             var cookieUsuario = FormsAuthentication.GetAuthCookie(nombreUsuario, true);
+
             cookieUsuario.Name = FormsAuthentication.FormsCookieName;
             cookieUsuario.Expires = DateTime.Now.AddDays(7);
 
             var ticket = FormsAuthentication.Decrypt(cookieUsuario.Value);
+
             var nuevoTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name, ticket.IssueDate, ticket.Expiration, ticket.IsPersistent, idUsuario);
+
             cookieUsuario.Value = FormsAuthentication.Encrypt(nuevoTicket);
+
             HttpContext.Current.Response.Cookies.Add(cookieUsuario);
         }
     }

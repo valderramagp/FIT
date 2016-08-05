@@ -1,0 +1,79 @@
+﻿@model List<FIT.Models.Corredor>
+@{
+    int total = ViewBag.Corredores * 360;
+    int corredores = ViewBag.Corredores;
+    int numCorredor = 0;
+}
+
+@for(int i = 0; i < corredores; i++)
+{
+    numCorredor++;
+    <div class="container corredor">
+        <div class="row">
+            <h1>Corredor @numCorredor</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <label for="Nombres">Nombre *</label>
+                <input type="text" name="corredor[@i].Nombres" class="form-control" required />
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <label for="Paterno">Apellido Paterno *</label>
+                <input type="text" name="corredor[@i].Paterno" class="form-control" required />
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <label for="Materno">Apellido Materno *</label>
+                <input type="text" name="corredor[@i].Materno" class="form-control" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <label for="Celular">Celular</label>
+                <input type="tel" name="corredor[@i].Celular" class="form-control" />
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <label for="Telefono">Teléfono</label>
+                <input type="tel" name="corredor[@i].Telefono" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-sm-4">
+                <label for="Sexo">Sexo *</label>
+                <select name="corredor[@i].Sexo" class="form-control" required>
+                    <option value="H">Hombre</option>
+                    <option value="M">Mujer</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-4">
+                <label for="Talla">Talla *</label>
+                <select name="corredor[@i].Talla" class="form-control" required>
+                    <option value="C ">Chica</option>
+                    <option value="M ">Mediana</option>
+                    <option value="G ">Grande</option>
+                    <option value="XL">Extra Grande</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-4">
+                <label for="IdCarrera">Carrera</label>
+                <select name="corredor[@i].IdCarrera" class="form-control" required>
+                    <option value="1">5K</option>
+                    <option value="2">10K</option>
+                    <option value="3">Caminata</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <label for="Correo">Correo *</label>
+                <input type="email" name="corredor[@i].Correo" class="form-control" required />
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <label for="FechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" name="corredor[@i].FechaNacimiento" class="form-control" required />
+            </div>
+        </div>
+    </div>
+}
+<div class="extra">
+    <div class="row text-right">
+        <h4>Total: $@total.00</h4>
+    </div>
+</div>

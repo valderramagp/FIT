@@ -19,28 +19,77 @@ namespace FIT.BLL
 
         public List<Corredor> GetCorredores()
         {
-            return ctx.Corredor.ToList();
+            return ctx.Corredor.Where(x => x.Status == true).ToList();
         }
 
         public void CreateCorredor(Corredor model)
         {
+            model.Status = true;
             ctx.Corredor.Add(model);
             var status = ctx.SaveChanges();
             if(status > 0)
             {
-                SendMail(model);
+                SendMail(model, "Administrador");
             }
         }
 
-        public void SendMail(Corredor corredor)
+        public int CreateCorredores(List<Corredor> corredores, string cp)
         {
+            foreach(var corredor in corredores)
+            {
+                corredor.Status = true;
+                corredor.ConfirmacionPago = cp;
+                ctx.Corredor.Add(corredor);
+                SendMail(corredor, "Paypal");
+            }
+            var status = ctx.SaveChanges();
+            return status;
+        }
+
+        public void SendMail(Corredor corredor, string tipoPago)
+        {
+            string from = "g316polanco@gmail.com";
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential("gustavoavalderrama@gmail.com", "ntjmeaqaepvuxkce"),
-                EnableSsl = true
+                Credentials = new NetworkCredential(from, "bensonal"),
+                EnableSsl = true,
+                
             };
+            var cuerpo = FormarCuerpo(corredor, tipoPago);
+            MailMessage mail = new MailMessage(from, corredor.Correo, "FIT: ¡INSCRIPCIÓN EXITOSA!", cuerpo);
+            mail.IsBodyHtml = true;
+            client.Send(mail);
+        }
 
-            client.Send("stephaniiebass@gmail.com", corredor.Correo, "test", "testbody");
+        public string FormarCuerpo(Corredor corredor, string tipoPago)
+        {
+            var carrera = GetCarreraById(corredor.IdCarrera);
+            string cuerpo = "Estimado " + corredor.Nombres + ", agradecemos su inscripción a la CARRERA FIT y anexamos su comprobante de inscripción:<br/><b> Información Personal </b><br/>";
+            cuerpo += "Confirmación: " + corredor.ConfirmacionPago + "<br/>";
+            cuerpo += "Nombre: " + corredor.Nombres + "<br/>";
+            cuerpo += "Apellido Paterno: " + corredor.Paterno + "<br/>";
+            cuerpo += "Apellido Materno: " + corredor.Materno + "<br/>";
+            cuerpo += "Sexo: " + corredor.Sexo + "<br />";
+            cuerpo += "Fecha de Nacimiento: " + corredor.FechaNacimiento.ToString("dd/MM/yyyy") + "<br/>";
+            cuerpo += "# Corredor: " + corredor.Folio + "<br/>";
+            cuerpo += "<b>Información de la Carrera</b><br/>";
+            cuerpo += "Carrera: FIT<br/>";
+            cuerpo += "Fecha: SÁBADO 3 DE SEPTIEMBRE DEL 2016 A LAS 07:00<br/>";
+            cuerpo += "Dirección: PARQUE BICENTENARIO<br/>";
+            cuerpo += "<b>Información de la Inscripción</b><br/>";
+            cuerpo += "Tipo de Pago: " + tipoPago + "<br/>";
+            cuerpo += "Precio: $360.00<br/>";
+            cuerpo += "Categoría: + " +  carrera.Descripcion + "<br/>";
+            cuerpo += "Talla: " + corredor.Talla + "<br/><br/>";
+            cuerpo += "Te recordamos que...<br/>";
+            cuerpo += "<ul><li>Para recoger tu kit de corredor deberás llevar: confirmación de inscripción, ";
+            cuerpo += "identificación oficial y exoneración de responsabilidades firmada la cual podrán descargar en los siguientes enlaces:";
+            cuerpo += "FIT_ADULTO.pdf [G316POLANCO.ORG/CARRERAFIT/FIT_ADULTO.PDF]FIT_MENOR.pdf [G316POLANCO.ORG/CARRERAFIT/FIT_MENOR.PDF]</li>";
+            cuerpo += "<li>La entrega de paquetes será el día 2 de SEPTIEMBRE en AUDITORIO G316 POLANCO DE 10M A 6PM </li>";
+            cuerpo += "<li>Te recordamos que no hay cambios de datos, talla de playera ni distancia</li>";
+            cuerpo += "<li>Llega una hora antes de tu salida</li>";
+            cuerpo += "</ul>";
+            return cuerpo;
         }
 
         public List<Carrera> GetCarrerasList()
@@ -51,6 +100,11 @@ namespace FIT.BLL
         public IEnumerable<SelectListItem> GetCarreras()
         {
             return (from c in ctx.Carrera select new SelectListItem { Text = c.Descripcion, Value = c.IdCarrera.ToString() });
+        }
+
+        public Carrera GetCarreraById(int id)
+        {
+            return ctx.Carrera.FirstOrDefault(x => x.IdCarrera == id);
         }
 
         public Corredor GetCorredorById(int id)

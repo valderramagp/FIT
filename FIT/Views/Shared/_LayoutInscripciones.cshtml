@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>FIT - @ViewBag.Title</title>
+    <link type="text/css" rel="stylesheet" href="~/Content/bootstrap.slate.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="~/Content/Inscripcion.css" />
+</head>
+<body>
+    <div class="jumbotron">
+        <div id="header-wrapper" class="text-center">
+            <img src="~/Images/pic04.png" class="text-center img-responsive" />
+            <h2>@ViewBag.Header</h2>
+        </div>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer class="container text-center">
+        <p>Para cualquier duda o aclaración favor de contactar a <a href="mailto:hola@g316polanco.org">hola@g316polanco.org</a></p>
+    </footer>
+</body>
+</html>

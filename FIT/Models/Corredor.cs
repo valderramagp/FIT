@@ -25,6 +25,8 @@ namespace FIT.Models
         public string Sexo { get; set; }
         public string Talla { get; set; }
         public int IdCarrera { get; set; }
+        public Nullable<bool> Status { get; set; }
+        public string ConfirmacionPago { get; set; }
     
         public virtual Carrera Carrera { get; set; }
     }

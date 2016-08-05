@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Error Inesperado";
+    string error = ViewBag.Error;
+    ViewBag.Header = error;
+    Layout = "~/Views/Shared/_LayoutInscripciones.cshtml";
+}
+
+<div class="text-center">
+    <h2>Lo sentimos mucho, pero ha ocurrido un error.</h2>
+    <p>Código de Error: @ViewBag.Cod. ¡Por favor ponte en contacto con soporte técnico!</p>
+</div>
+

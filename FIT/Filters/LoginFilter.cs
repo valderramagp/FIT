@@ -11,7 +11,7 @@ namespace FIT.Filters
     {
         public void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (SessionHelpers.IsAutenticado())
+            if (!SessionHelpers.IsAutenticado())
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Acceso", action = "Index" }));
             }

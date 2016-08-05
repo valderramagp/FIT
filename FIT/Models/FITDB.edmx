@@ -27,6 +27,8 @@
           <Property Name="Sexo" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="Talla" Type="char" MaxLength="2" Nullable="false" />
           <Property Name="IdCarrera" Type="int" Nullable="false" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="ConfirmacionPago" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Usuarios">
           <Key>
@@ -36,16 +38,11 @@
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="Voluntarios">
           <Key>
             <PropertyRef Name="IdVoluntario" />
-            <PropertyRef Name="Nombre" />
-            <PropertyRef Name="APaterno" />
-            <PropertyRef Name="Eventos" />
           </Key>
-          <Property Name="IdVoluntario" Type="int" Nullable="false" />
+          <Property Name="IdVoluntario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="APaterno" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="AMaterno" Type="varchar" MaxLength="50" />
@@ -70,18 +67,7 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
           <EntitySet Name="Carrera" EntityType="Self.Carrera" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Corredor" EntityType="Self.Corredor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Voluntarios" EntityType="Self.Voluntarios" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Voluntarios].[IdVoluntario] AS [IdVoluntario], 
-    [Voluntarios].[Nombre] AS [Nombre], 
-    [Voluntarios].[APaterno] AS [APaterno], 
-    [Voluntarios].[AMaterno] AS [AMaterno], 
-    [Voluntarios].[Mail] AS [Mail], 
-    [Voluntarios].[Telefono] AS [Telefono], 
-    [Voluntarios].[Celular] AS [Celular], 
-    [Voluntarios].[Eventos] AS [Eventos]
-    FROM [dbo].[Voluntarios] AS [Voluntarios]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Voluntarios" EntityType="Self.Voluntarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Corredor_Carrera" Association="Self.FK_Corredor_Carrera">
             <End Role="Carrera" EntitySet="Carrera" />
             <End Role="Corredor" EntitySet="Corredor" />
@@ -94,12 +80,12 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
         <EntityContainer Name="FITEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Usuarios" EntityType="FITModel.Usuarios" />
           <EntitySet Name="Carrera" EntityType="FITModel.Carrera" />
+          <EntitySet Name="Voluntarios" EntityType="FITModel.Voluntarios" />
           <EntitySet Name="Corredor" EntityType="FITModel.Corredor" />
           <AssociationSet Name="FK_Corredor_Carrera" Association="FITModel.FK_Corredor_Carrera">
             <End Role="Carrera" EntitySet="Carrera" />
             <End Role="Corredor" EntitySet="Corredor" />
           </AssociationSet>
-          <EntitySet Name="Voluntarios" EntityType="FITModel.Voluntarios" />
         </EntityContainer>
         <EntityType Name="Usuarios">
           <Key>
@@ -117,6 +103,19 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
           <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Corredor" Relationship="FITModel.FK_Corredor_Carrera" FromRole="Carrera" ToRole="Corredor" />
         </EntityType>
+        <EntityType Name="Voluntarios">
+          <Key>
+            <PropertyRef Name="IdVoluntario" />
+          </Key>
+          <Property Name="IdVoluntario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="APaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Celular" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Eventos" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="Corredor">
           <Key>
             <PropertyRef Name="Folio" />
@@ -132,6 +131,8 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
           <Property Name="Sexo" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Talla" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
           <Property Name="IdCarrera" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="ConfirmacionPago" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Carrera" Relationship="FITModel.FK_Corredor_Carrera" FromRole="Corredor" ToRole="Carrera" />
         </EntityType>
         <Association Name="FK_Corredor_Carrera">
@@ -146,22 +147,6 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Voluntarios">
-          <Key>
-            <PropertyRef Name="IdVoluntario" />
-            <PropertyRef Name="Nombre" />
-            <PropertyRef Name="APaterno" />
-            <PropertyRef Name="Eventos" />
-          </Key>
-          <Property Name="IdVoluntario" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="APaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Celular" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Eventos" Type="Int32" Nullable="false" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -185,23 +170,6 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Corredor">
-            <EntityTypeMapping TypeName="FITModel.Corredor">
-              <MappingFragment StoreEntitySet="Corredor">
-                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
-                <ScalarProperty Name="Talla" ColumnName="Talla" />
-                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
-                <ScalarProperty Name="Correo" ColumnName="Correo" />
-                <ScalarProperty Name="Celular" ColumnName="Celular" />
-                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
-                <ScalarProperty Name="Materno" ColumnName="Materno" />
-                <ScalarProperty Name="Paterno" ColumnName="Paterno" />
-                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
-                <ScalarProperty Name="Folio" ColumnName="Folio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Voluntarios">
             <EntityTypeMapping TypeName="FITModel.Voluntarios">
               <MappingFragment StoreEntitySet="Voluntarios">
@@ -213,6 +181,25 @@ advertencia 6002: La tabla o vista 'FIT.dbo.Voluntarios' no tiene definida ningu
                 <ScalarProperty Name="APaterno" ColumnName="APaterno" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="IdVoluntario" ColumnName="IdVoluntario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Corredor">
+            <EntityTypeMapping TypeName="FITModel.Corredor">
+              <MappingFragment StoreEntitySet="Corredor">
+                <ScalarProperty Name="ConfirmacionPago" ColumnName="ConfirmacionPago" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="Talla" ColumnName="Talla" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Materno" ColumnName="Materno" />
+                <ScalarProperty Name="Paterno" ColumnName="Paterno" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Folio" ColumnName="Folio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
