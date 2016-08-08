@@ -25,6 +25,7 @@ namespace FIT.BLL
         public void CreateCorredor(Corredor model)
         {
             model.Status = true;
+            model.ConfirmacionPago = "Manager";
             ctx.Corredor.Add(model);
             var status = ctx.SaveChanges();
             if(status > 0)
@@ -33,16 +34,50 @@ namespace FIT.BLL
             }
         }
 
-        public int CreateCorredores(List<Corredor> corredores, string cp)
+        /// <summary>
+        /// Crea los corredores temporalmente en la base de datos con status false
+        /// </summary>
+        /// <param name="corredores"></param>
+        /// <returns></returns>
+        public int CreateCorredores(List<Corredor> corredores)
         {
+            var code = RandomString(10);
             foreach(var corredor in corredores)
             {
-                corredor.Status = true;
-                corredor.ConfirmacionPago = cp;
+                corredor.Status = false;
+                corredor.ConfirmacionPago = code;
                 ctx.Corredor.Add(corredor);
-                SendMail(corredor, "Paypal");
             }
-            var status = ctx.SaveChanges();
+            return ctx.SaveChanges();
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public int CreateCorredores(string codigo, string cp)
+        {
+            var exists = ctx.Corredor.Where(x => x.ConfirmacionPago == cp).ToList();
+            var status = 0;
+            if (exists.Count == 0)
+            {
+                var corredores = ctx.Corredor.Where(x => x.ConfirmacionPago == codigo).ToList();
+                if (corredores != null)
+                {
+                    foreach (var corredor in corredores)
+                    {
+                        corredor.Status = true;
+                        corredor.ConfirmacionPago = cp;
+                    
+                        SendMail(corredor, "Paypal");
+                    }
+                    status = ctx.SaveChanges();
+                }
+            }
             return status;
         }
 
@@ -51,7 +86,7 @@ namespace FIT.BLL
             string from = "g316polanco@gmail.com";
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential(from, "bensonal"),
+                Credentials = new NetworkCredential(from, "duwugsrufumdlgyx"),
                 EnableSsl = true,
                 
             };

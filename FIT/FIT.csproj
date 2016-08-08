@@ -163,6 +163,7 @@
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\carrerafit - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\carrerafit.pubxml" />
     <None Include="scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="scripts\jquery-2.2.4.js" />
     <Content Include="scripts\jquery-2.2.4.min.js" />

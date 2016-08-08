@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using FIT.BLL;
 using FIT.Models;
+using System.Web.UI;
 
 namespace FIT.Controllers
 {
@@ -13,6 +14,17 @@ namespace FIT.Controllers
         // GET: Inscripcion
         public ActionResult Index()
         {
+            Response.Cookies["AcceptCookies"].Value = "ok";
+            Response.Cookies["AcceptCookies"].Expires = DateTime.Now.AddDays(1);
+
+            var status = TestCookies("AcceptCookies");
+            if (!status)
+                return RedirectToAction("Error", new { message = 4 });
+            Response.Cookies["AcceptCookies"].Expires = DateTime.Now.AddDays(-1);
+            if(TestCookies("codigo"))
+            {
+                Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
+            } 
             return View();
         }
 
@@ -23,10 +35,25 @@ namespace FIT.Controllers
         }
 
         [HttpPost]
-        public void Inscribir(List<Corredor> corredor)
+        public JsonResult Inscribir(List<Corredor> corredor)
         {
-            Session.Timeout = 50;
-            Session["corredores"] = corredor;
+            Manager m = new Manager();
+            m.CreateCorredores(corredor);
+            Response.Cookies["codigo"].Value = corredor[0].ConfirmacionPago;
+            Response.Cookies["codigo"].Expires = DateTime.Now.AddHours(1);
+            var status = TestCookies("codigo");
+            return Json(status, JsonRequestBehavior.AllowGet);
+        }
+
+        private bool TestCookies(string cookie)
+        {
+            return Request.Cookies[cookie] != null ? true : false;
+        }
+
+        public bool TestSession()
+        {
+            var corredores = Session["corredores"] as List<Corredor>;
+            return corredores == null ? false : true;
         }
 
         public ActionResult Confirmation(string tx = "", string st = "", double amt = 0)
@@ -38,20 +65,21 @@ namespace FIT.Controllers
                 if (numCorredores < 1)
                     return RedirectToAction("Error", new { message = 3 });
 
-                var corredores = Session["corredores"] as List<Corredor>;
-                if (corredores == null)
+                HttpCookie codigo = new HttpCookie("codigo");
+                codigo = Request.Cookies["codigo"];
+                var exists = TestCookies("codigo");
+                if (!exists)
                     return RedirectToAction("Error", new { message = 1 });
-
-                while(corredores.Count != numCorredores)
+                
+                var totalInscritos = m.CreateCorredores(codigo.Value, tx);
+                if (totalInscritos > 0)
                 {
-                    var i = corredores.Count - 1;
-                    corredores.RemoveAt(i);
+                    ViewBag.TotalInscritos = totalInscritos;
+                    ViewBag.Confirmation = tx;
+                    Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
+                    return View();
                 }
-                var totalInscritos = m.CreateCorredores(corredores, tx);
-                ViewBag.TotalInscritos = totalInscritos;
-                ViewBag.Confirmation = tx;
-                Session.Abandon();
-                return View();
+                else return RedirectToAction("Error", new { message = 1 });
             }
             else return RedirectToAction("Error", new { message = 2 });
         }
@@ -71,6 +99,14 @@ namespace FIT.Controllers
                 case 3:
                     ViewBag.Error = "¡El pago no ha sido procesado correctamente!";
                     ViewBag.Cod = 1012;
+                    break;
+                case 4:
+                    ViewBag.Error = "Por favor configura tu navegador para aceptar cookies!";
+                    ViewBag.Cod = 1013;
+                    break;
+                case 404:
+                    ViewBag.Error = "La página que buscas no existe!";
+                    ViewBag.Cod = 404;
                     break;
                 default:
                     ViewBag.Error = "¡Ha ocurrido un error inesperado!";

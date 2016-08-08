@@ -14,5 +14,23 @@ namespace FIT
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
+
+        protected void Aplication_Error()
+        {
+            Exception ex = Server.GetLastError();
+
+            //Borramos el contenido del buffer 
+            Response.Clear();
+
+            HttpException httpException = ex as HttpException;
+
+            //404
+            //Si la variable != null se toma el codigo de la excepcion sino se asigna cero
+            var codError = httpException?.GetHttpCode() ?? 0;
+
+            //--- --- --- Serr
+            Server.ClearError();
+            Response.Redirect("~/Inscripcion/Error/" + codError);
+        }
     }
 }
