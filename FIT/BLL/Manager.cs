@@ -105,7 +105,7 @@ namespace FIT.BLL
             cuerpo += "Apellido Paterno: " + corredor.Paterno + "<br/>";
             cuerpo += "Apellido Materno: " + corredor.Materno + "<br/>";
             cuerpo += "Sexo: " + corredor.Sexo + "<br />";
-            cuerpo += "Fecha de Nacimiento: " + corredor.FechaNacimiento.ToString("dd/MM/yyyy") + "<br/>";
+            cuerpo += "Fecha de Nacimiento: " + corredor.Edad + "<br/>";
             cuerpo += "# Corredor: " + corredor.Folio + "<br/>";
             cuerpo += "<b>Información de la Carrera</b><br/>";
             cuerpo += "Carrera: FIT<br/>";

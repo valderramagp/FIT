@@ -18,7 +18,7 @@ namespace FIT.Models
         public string Nombres { get; set; }
         public string Paterno { get; set; }
         public string Materno { get; set; }
-        public System.DateTime FechaNacimiento { get; set; }
+        public int Edad { get; set; }
         public string Telefono { get; set; }
         public string Celular { get; set; }
         public string Correo { get; set; }
