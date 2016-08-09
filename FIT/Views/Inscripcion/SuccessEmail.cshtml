@@ -1,4 +1,4 @@
-﻿@model FIT.Models.Corredor
+﻿@model FIT.BLL.DatosCorreo
 @{
     Layout = null;
 }
@@ -42,12 +42,12 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <b># Corredor: </b>@Model.Folio
+                                        <b># Corredor: </b>@Model.NumCorredor
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <b>Nombre: </b>@Model.Nombres
+                                        <b>Nombre: </b>@Model.Nombre @Model.Paterno @Model.Materno
                                     </td>
                                 </tr>
                                 <tr>
@@ -65,11 +65,26 @@
                                         <b>Talla: </b>@Model.Talla
                                     </td>
                                 </tr>
-                                @*<tr>
+                                <tr>
                                     <td>
-                                        <b>Carrera: </b>@Model.Carrera.Descripcion
+                                        <b>Teléfono: </b>@Model.Telefono
                                     </td>
-                                </tr>*@
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Celular: </b>@Model.Celular
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Carrera: </b>@Model.Carrera
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Hora: </b> 7:00 AM
+                                    </td>
+                                </tr>
                             </table>
                         </td>
                     </tr>

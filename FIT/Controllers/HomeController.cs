@@ -30,9 +30,25 @@ namespace FIT.Controllers
         public RedirectToRouteResult CreateRunner(Corredor corredor)
         {
             m.CreateCorredor(corredor);
+
+            DatosCorreo data = new DatosCorreo();
+            data.NumCorredor = corredor.Folio;
+            data.Nombre = corredor.Nombres;
+            data.Paterno = corredor.Paterno;
+            data.Materno = corredor.Materno;
+            data.Edad = corredor.Edad;
+            data.Telefono = corredor.Telefono;
+            data.Celular = corredor.Celular;
+            data.Correo = corredor.Correo;
+            data.Sexo = corredor.Sexo;
+            data.Talla = corredor.Talla;
+            data.Carrera = m.GetCarreraById(corredor.IdCarrera).Descripcion;
+            data.ConfirmacionPago = corredor.ConfirmacionPago;
             InscripcionController contr = new InscripcionController();
-            var body = contr.RenderViewToString(corredor);
+            var body = contr.RenderViewToString(data);
+
             m.SendMail(corredor, body);
+
             return RedirectToAction("Index");
         }
 

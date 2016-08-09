@@ -24,10 +24,11 @@ namespace FIT.BLL
 
         public void CreateCorredor(Corredor model)
         {
+            var cp = RandomString(10);
             model.Status = true;
-            model.ConfirmacionPago = "Manager";
+            model.ConfirmacionPago = cp;
             ctx.Corredor.Add(model);
-            var status = ctx.SaveChanges();
+            ctx.SaveChanges();
         }
 
         /// <summary>
@@ -94,9 +95,13 @@ namespace FIT.BLL
                 EnableSsl = true,
             };
             MailMessage mail = new MailMessage(from, corredor.Correo, "FIT: ¡INSCRIPCIÓN EXITOSA!", body);
-            mail.To.Add("g316polanco@jme.mx");
             mail.IsBodyHtml = true;
             client.Send(mail);
+
+            MailMessage mailAdmin = new MailMessage(from, "g316polanco@jme.mx", "FIT: Confirmación de Pago de " + corredor.Nombres, body);
+            mailAdmin.To.Add("gustavoavalderrama@gmail.com");
+            mailAdmin.IsBodyHtml = true;
+            client.Send(mailAdmin);
         }
 
         public List<Carrera> GetCarrerasList()

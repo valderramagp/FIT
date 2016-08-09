@@ -63,7 +63,7 @@ namespace FIT.Controllers
             }
         }
 
-        public ActionResult SuccessEmail(Corredor corredor)
+        public ActionResult SuccessEmail(DatosCorreo corredor)
         {
             return View(corredor);
         }
@@ -93,7 +93,20 @@ namespace FIT.Controllers
                 {
                     foreach(var item in totalInscritos)
                     {
-                        var body = RenderViewToString(item);
+                        DatosCorreo data = new DatosCorreo();
+                        data.NumCorredor = item.Folio;
+                        data.Nombre = item.Nombres;
+                        data.Paterno = item.Paterno;
+                        data.Materno = item.Materno;
+                        data.Edad = item.Edad;
+                        data.Telefono = item.Telefono;
+                        data.Celular = item.Celular;
+                        data.Correo = item.Correo;
+                        data.Sexo = item.Sexo;
+                        data.Talla = item.Talla;
+                        data.Carrera = m.GetCarreraById(item.IdCarrera).Descripcion;
+                        data.ConfirmacionPago = item.ConfirmacionPago;
+                        var body = RenderViewToString(data);
                         m.SendMail(item, body);
                     }
 
