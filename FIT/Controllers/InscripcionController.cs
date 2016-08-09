@@ -79,27 +79,20 @@ namespace FIT.Controllers
             return corredores == null ? false : true;
         }
 
-        public ActionResult Confirmation(string tx = "", string st = "", double amt = 0)
+        public ActionResult Confirmation(string tx = "", string st = "")
         {
             if (st == "Completed")
             {
                 Manager m = new Manager();
-                var numCorredores = amt / 360;
-                if (numCorredores < 1)
-                    return RedirectToAction("Error", new { message = 3 });
 
                 HttpCookie codigo = new HttpCookie("codigo");
                 codigo = Request.Cookies["codigo"];
-                var exists = TestCookies("codigo");
-                if (!exists)
-                    return RedirectToAction("Error", new { message = 1 });
                 
                 var totalInscritos = m.CreateCorredores(codigo.Value, tx);
                 if (totalInscritos.Count > 0)
                 {
                     foreach(var item in totalInscritos)
                     {
-                        item.Carrera = m.GetCarreraById(item.IdCarrera);
                         var body = RenderViewToString(item);
                         m.SendMail(item, body);
                     }
@@ -109,9 +102,9 @@ namespace FIT.Controllers
                     Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
                     return View();
                 }
-                else return RedirectToAction("Error", new { message = 1 });
+                return RedirectToAction("Error", new { message = 2 });
             }
-            else return RedirectToAction("Error", new { message = 2 });
+            return RedirectToAction("Error", new { message = 2 });
         }
 
         public ActionResult Error(int message = 0)

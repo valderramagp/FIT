@@ -28,12 +28,12 @@
         </div>
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label for="Celular">Celular</label>
-                <input type="tel" name="corredor[@i].Celular" class="form-control" />
+                <label for="Celular">Celular *</label>
+                <input type="tel" name="corredor[@i].Celular" class="form-control" required />
             </div>
             <div class="col-md-6 col-sm-12">
-                <label for="Telefono">Teléfono</label>
-                <input type="tel" name="corredor[@i].Telefono" class="form-control" />
+                <label for="Telefono">Teléfono *</label>
+                <input type="tel" name="corredor[@i].Telefono" class="form-control" required />
             </div>
         </div>
         <div class="row">
@@ -63,7 +63,7 @@
             </div>
             <div class="col-md-3 col-sm-12">
                 <label for="Correo">Correo *</label>
-                <input type="email" name="corredor[@i].Correo" class="form-control" required />
+                <input type="email" name="corredor[@i].Correo" class="form-control" required data-toggle="tooltip" title="Te enviaremos la confirmación a este correo. ¡Asegurate de que esté correcto!" placeholder="Te enviaremos la confirmación a este correo. ¡Asegurate de que esté correcto!" />
             </div>
             <div class="col-md-3 col-sm-12">
                 <label for="Edad">Edad</label>
@@ -82,3 +82,8 @@
         <h4>Total: $@total.00</h4>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

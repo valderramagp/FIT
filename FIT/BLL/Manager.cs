@@ -57,35 +57,30 @@ namespace FIT.BLL
 
         public List<Corredor> CreateCorredores(string codigo, string cp)
         {
-            var exists = ctx.Corredor.Where(x => x.ConfirmacionPago == cp).ToList();
-            if (exists.Count == 0)
+            var temporales = ctx.Temporal.Where(x => x.Cookie == codigo).ToList();
+            if (temporales != null)
             {
-                var temporales = ctx.Temporal.Where(x => x.Cookie == codigo).ToList();
-                if (temporales != null)
+                var corredores = new List<Corredor>();
+                foreach (var temporal in temporales)
                 {
-                    var corredores = new List<Corredor>();
-                    foreach (var temporal in temporales)
-                    {
-                        Corredor corredor = new Corredor();
-                        corredor.Nombres = temporal.Nombres;
-                        corredor.Paterno = temporal.Paterno;
-                        corredor.Materno = temporal.Materno;
-                        corredor.Edad = temporal.Edad;
-                        corredor.Telefono = temporal.Telefono;
-                        corredor.Celular = temporal.Celular;
-                        corredor.Correo = temporal.Correo;
-                        corredor.Sexo = temporal.Sexo;
-                        corredor.Talla = temporal.Talla;
-                        corredor.IdCarrera = temporal.IdCarrera;
-                        corredor.Status = true;
-                        corredor.ConfirmacionPago = cp;
-                        corredores.Add(corredor);
-                        ctx.Corredor.Add(corredor);
-                    }
-                    ctx.SaveChanges();
-                    return corredores;
+                    Corredor corredor = new Corredor();
+                    corredor.Nombres = temporal.Nombres;
+                    corredor.Paterno = temporal.Paterno;
+                    corredor.Materno = temporal.Materno;
+                    corredor.Edad = temporal.Edad;
+                    corredor.Telefono = temporal.Telefono;
+                    corredor.Celular = temporal.Celular;
+                    corredor.Correo = temporal.Correo;
+                    corredor.Sexo = temporal.Sexo;
+                    corredor.Talla = temporal.Talla;
+                    corredor.IdCarrera = temporal.IdCarrera;
+                    corredor.Status = true;
+                    corredor.ConfirmacionPago = cp;
+                    corredores.Add(corredor);
+                    ctx.Corredor.Add(corredor);
                 }
-                return null;
+                ctx.SaveChanges();
+                return corredores;
             }
             return null;
         }
@@ -99,6 +94,7 @@ namespace FIT.BLL
                 EnableSsl = true,
             };
             MailMessage mail = new MailMessage(from, corredor.Correo, "FIT: ¡INSCRIPCIÓN EXITOSA!", body);
+            mail.To.Add("g316polanco@jme.mx");
             mail.IsBodyHtml = true;
             client.Send(mail);
         }
