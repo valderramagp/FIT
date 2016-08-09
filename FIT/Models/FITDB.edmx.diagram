@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="FITModel.Voluntarios" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="FITModel.Corredor" Width="1.5" PointX="3" PointY="3.875" />
         <AssociationConnector Association="FITModel.FK_Corredor_Carrera" />
+        <EntityTypeShape EntityType="FITModel.Temporal" Width="1.5" PointX="5.25" PointY="4" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

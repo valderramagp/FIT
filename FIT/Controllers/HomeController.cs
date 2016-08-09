@@ -30,6 +30,9 @@ namespace FIT.Controllers
         public RedirectToRouteResult CreateRunner(Corredor corredor)
         {
             m.CreateCorredor(corredor);
+            InscripcionController contr = new InscripcionController();
+            var body = contr.RenderViewToString(corredor);
+            m.SendMail(corredor, body);
             return RedirectToAction("Index");
         }
 

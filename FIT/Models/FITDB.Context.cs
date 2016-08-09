@@ -29,5 +29,6 @@ namespace FIT.Models
         public virtual DbSet<Carrera> Carrera { get; set; }
         public virtual DbSet<Voluntarios> Voluntarios { get; set; }
         public virtual DbSet<Corredor> Corredor { get; set; }
+        public virtual DbSet<Temporal> Temporal { get; set; }
     }
 }

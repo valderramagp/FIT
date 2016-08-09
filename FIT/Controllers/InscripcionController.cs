@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using FIT.BLL;
 using FIT.Models;
 using System.Web.UI;
+using System.IO;
+using System.Web.Routing;
 
 namespace FIT.Controllers
 {
@@ -35,14 +37,35 @@ namespace FIT.Controllers
         }
 
         [HttpPost]
-        public JsonResult Inscribir(List<Corredor> corredor)
+        public JsonResult Inscribir(List<Temporal> corredor)
         {
             Manager m = new Manager();
             m.CreateCorredores(corredor);
-            Response.Cookies["codigo"].Value = corredor[0].ConfirmacionPago;
-            Response.Cookies["codigo"].Expires = DateTime.Now.AddHours(1);
+            Response.Cookies["codigo"].Value = corredor[0].Cookie;
+            Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(1);
             var status = TestCookies("codigo");
             return Json(status, JsonRequestBehavior.AllowGet);
+        }
+
+        public string RenderViewToString(object viewData)
+        {
+            using (var writer = new StringWriter())
+            {
+                var routeData = new RouteData();
+                routeData.Values.Add("controller", "Inscripcion");
+                var inscripcionController = new ControllerContext(new HttpContextWrapper(new HttpContext(new HttpRequest(null, "http://google.com", null), new HttpResponse(null))), routeData, new InscripcionController());
+                var razorViewEngine = new RazorViewEngine();
+                var razorViewResult = razorViewEngine.FindView(inscripcionController, "SuccessEmail", "", false);
+
+                var viewContext = new ViewContext(inscripcionController, razorViewResult.View, new ViewDataDictionary(viewData), new TempDataDictionary(), writer);
+                razorViewResult.View.Render(viewContext, writer);
+                return writer.ToString();
+            }
+        }
+
+        public ActionResult SuccessEmail(Corredor corredor)
+        {
+            return View(corredor);
         }
 
         private bool TestCookies(string cookie)
@@ -72,9 +95,16 @@ namespace FIT.Controllers
                     return RedirectToAction("Error", new { message = 1 });
                 
                 var totalInscritos = m.CreateCorredores(codigo.Value, tx);
-                if (totalInscritos > 0)
+                if (totalInscritos.Count > 0)
                 {
-                    ViewBag.TotalInscritos = totalInscritos;
+                    foreach(var item in totalInscritos)
+                    {
+                        item.Carrera = m.GetCarreraById(item.IdCarrera);
+                        var body = RenderViewToString(item);
+                        m.SendMail(item, body);
+                    }
+
+                    ViewBag.TotalInscritos = totalInscritos.Count;
                     ViewBag.Confirmation = tx;
                     Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
                     return View();

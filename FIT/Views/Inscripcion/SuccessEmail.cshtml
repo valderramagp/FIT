@@ -1,0 +1,108 @@
+﻿@model FIT.Models.Corredor
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Document</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+</head>
+<body style="margin: 0; padding: 0;">
+    <table border="0" cellspacing="0" width="100%">
+        <tr>
+            <td>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="750px" style="border-collapse: collapse;">
+                    <tr>
+                        <td>
+                            <img src="http://g316polanco.org/fit/images/banner_mail.jpg" style="width: 100%;" alt="Carrera FIT">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#000" style="color: #fff; padding: 20px 30px 0 30px">
+                            <table cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td style="font-family: 'Montserrat', sans-serif; text-align: center; ">
+                                        <h2>¡INSCRIPCIÓN EXITOSA!</h2>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#000" style="color: #fff; padding: 10px 30px 10px 30px">
+                            <table cellpadding="0" cellspacing="10px" width="100%" style="font-family: 'Montserrat', sans-serif;">
+                                <tr style="margin-bottom: 50px;">
+                                    <td>
+                                        <b>Confirmación: </b>@Model.ConfirmacionPago
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b># Corredor: </b>@Model.Folio
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Nombre: </b>@Model.Nombres
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Género: </b>@Model.Sexo
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Edad: </b>@Model.Edad
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Talla: </b>@Model.Talla
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Carrera: </b>@Model.Carrera.Descripcion
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#000" style="color: #fff; padding:0 30px 20px 30px">
+                            <table cellpadding="10" cellspacing="0" width="100%">
+                                <tr>
+                                    <td style="font-family: 'Montserrat', sans-seriff; text-align:center;">
+                                        Te recordamos que para recoger tu kit de corredor, deberás llevar esta confirmación de inscripción, identificación oficial y exoneración de responsabilidades la cuál podrás descargar en los siguientes enlaces:
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <a href="http://g316polanco.org/CARRERAFIT/FIT_MENOR.PDF" style="color: #fff; font-family: 'Montserrat', sans-seriff;">
+                                                    Menores de Edad
+                                                </a>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <a href="http://g316polanco.org/CARRERAFIT/FIT_ADULTO.PDF%5DFIT_MENOR.pdf" style="color: #fff; font-family: 'Montserrat', sans-seriff;">
+                                                    Mayores de Edad
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

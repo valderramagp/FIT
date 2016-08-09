@@ -28,10 +28,6 @@ namespace FIT.BLL
             model.ConfirmacionPago = "Manager";
             ctx.Corredor.Add(model);
             var status = ctx.SaveChanges();
-            if(status > 0)
-            {
-                SendMail(model, "Administrador");
-            }
         }
 
         /// <summary>
@@ -39,14 +35,14 @@ namespace FIT.BLL
         /// </summary>
         /// <param name="corredores"></param>
         /// <returns></returns>
-        public int CreateCorredores(List<Corredor> corredores)
+        public int CreateCorredores(List<Temporal> temporales)
         {
             var code = RandomString(10);
-            foreach(var corredor in corredores)
+            foreach(var corredor in temporales)
             {
-                corredor.Status = false;
-                corredor.ConfirmacionPago = code;
-                ctx.Corredor.Add(corredor);
+                corredor.FechaRegistro = DateTime.Now;
+                corredor.Cookie = code;
+                ctx.Temporal.Add(corredor);
             }
             return ctx.SaveChanges();
         }
@@ -59,72 +55,52 @@ namespace FIT.BLL
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public int CreateCorredores(string codigo, string cp)
+        public List<Corredor> CreateCorredores(string codigo, string cp)
         {
             var exists = ctx.Corredor.Where(x => x.ConfirmacionPago == cp).ToList();
-            var status = 0;
             if (exists.Count == 0)
             {
-                var corredores = ctx.Corredor.Where(x => x.ConfirmacionPago == codigo).ToList();
-                if (corredores != null)
+                var temporales = ctx.Temporal.Where(x => x.Cookie == codigo).ToList();
+                if (temporales != null)
                 {
-                    foreach (var corredor in corredores)
+                    var corredores = new List<Corredor>();
+                    foreach (var temporal in temporales)
                     {
+                        Corredor corredor = new Corredor();
+                        corredor.Nombres = temporal.Nombres;
+                        corredor.Paterno = temporal.Paterno;
+                        corredor.Materno = temporal.Materno;
+                        corredor.Edad = temporal.Edad;
+                        corredor.Telefono = temporal.Telefono;
+                        corredor.Celular = temporal.Celular;
+                        corredor.Correo = temporal.Correo;
+                        corredor.Sexo = temporal.Sexo;
+                        corredor.Talla = temporal.Talla;
+                        corredor.IdCarrera = temporal.IdCarrera;
                         corredor.Status = true;
                         corredor.ConfirmacionPago = cp;
-                    
-                        SendMail(corredor, "Paypal");
+                        corredores.Add(corredor);
+                        ctx.Corredor.Add(corredor);
                     }
-                    status = ctx.SaveChanges();
+                    ctx.SaveChanges();
+                    return corredores;
                 }
+                return null;
             }
-            return status;
+            return null;
         }
 
-        public void SendMail(Corredor corredor, string tipoPago)
+        public void SendMail(Corredor corredor, string body)
         {
             string from = "g316polanco@gmail.com";
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
                 Credentials = new NetworkCredential(from, "duwugsrufumdlgyx"),
                 EnableSsl = true,
-                
             };
-            var cuerpo = FormarCuerpo(corredor, tipoPago);
-            MailMessage mail = new MailMessage(from, corredor.Correo, "FIT: ¡INSCRIPCIÓN EXITOSA!", cuerpo);
+            MailMessage mail = new MailMessage(from, corredor.Correo, "FIT: ¡INSCRIPCIÓN EXITOSA!", body);
             mail.IsBodyHtml = true;
             client.Send(mail);
-        }
-
-        public string FormarCuerpo(Corredor corredor, string tipoPago)
-        {
-            var carrera = GetCarreraById(corredor.IdCarrera);
-            string cuerpo = "Estimado " + corredor.Nombres + ", agradecemos su inscripción a la CARRERA FIT y anexamos su comprobante de inscripción:<br/><b> Información Personal </b><br/>";
-            cuerpo += "Confirmación: " + corredor.ConfirmacionPago + "<br/>";
-            cuerpo += "Nombre: " + corredor.Nombres + "<br/>";
-            cuerpo += "Apellido Paterno: " + corredor.Paterno + "<br/>";
-            cuerpo += "Apellido Materno: " + corredor.Materno + "<br/>";
-            cuerpo += "Sexo: " + corredor.Sexo + "<br />";
-            cuerpo += "Fecha de Nacimiento: " + corredor.Edad + "<br/>";
-            cuerpo += "# Corredor: " + corredor.Folio + "<br/>";
-            cuerpo += "<b>Información de la Carrera</b><br/>";
-            cuerpo += "Carrera: FIT<br/>";
-            cuerpo += "Fecha: SÁBADO 3 DE SEPTIEMBRE DEL 2016 A LAS 07:00<br/>";
-            cuerpo += "Dirección: PARQUE BICENTENARIO<br/>";
-            cuerpo += "<b>Información de la Inscripción</b><br/>";
-            cuerpo += "Tipo de Pago: " + tipoPago + "<br/>";
-            cuerpo += "Precio: $360.00<br/>";
-            cuerpo += "Categoría: + " +  carrera.Descripcion + "<br/>";
-            cuerpo += "Talla: " + corredor.Talla + "<br/><br/>";
-            cuerpo += "Te recordamos que...<br/>";
-            cuerpo += "<ul><li>Para recoger tu kit de corredor deberás llevar: confirmación de inscripción, ";
-            cuerpo += "identificación oficial y exoneración de responsabilidades firmada la cual podrán descargar en los siguientes enlaces:";
-            cuerpo += "FIT_ADULTO.pdf [G316POLANCO.ORG/CARRERAFIT/FIT_ADULTO.PDF]FIT_MENOR.pdf [G316POLANCO.ORG/CARRERAFIT/FIT_MENOR.PDF]</li>";
-            cuerpo += "<li>La entrega de paquetes será el día 2 de SEPTIEMBRE en AUDITORIO G316 POLANCO DE 10M A 6PM </li>";
-            cuerpo += "<li>Te recordamos que no hay cambios de datos, talla de playera ni distancia</li>";
-            cuerpo += "<li>Llega una hora antes de tu salida</li>";
-            cuerpo += "</ul>";
-            return cuerpo;
         }
 
         public List<Carrera> GetCarrerasList()
@@ -152,6 +128,8 @@ namespace FIT.BLL
             var original = GetCorredorById(corredor.Folio);
             if(original != null)
             {
+                corredor.Status = original.Status;
+                corredor.ConfirmacionPago = original.ConfirmacionPago;
                 ctx.Entry(original).CurrentValues.SetValues(corredor);
                 ctx.SaveChanges();
             }

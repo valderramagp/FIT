@@ -30,6 +30,24 @@
           <Property Name="Status" Type="bit" />
           <Property Name="ConfirmacionPago" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Temporal">
+          <Key>
+            <PropertyRef Name="IdCorredor" />
+          </Key>
+          <Property Name="IdCorredor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Paterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Materno" Type="varchar" MaxLength="50" />
+          <Property Name="Edad" Type="int" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="10" />
+          <Property Name="Celular" Type="varchar" MaxLength="10" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sexo" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Talla" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="IdCarrera" Type="int" Nullable="false" />
+          <Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+          <Property Name="Cookie" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Usuarios">
           <Key>
             <PropertyRef Name="IdUsuario" />
@@ -66,6 +84,7 @@
         <EntityContainer Name="FITModelStoreContainer">
           <EntitySet Name="Carrera" EntityType="Self.Carrera" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Corredor" EntityType="Self.Corredor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Temporal" EntityType="Self.Temporal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Voluntarios" EntityType="Self.Voluntarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Corredor_Carrera" Association="Self.FK_Corredor_Carrera">
@@ -86,6 +105,7 @@
             <End Role="Carrera" EntitySet="Carrera" />
             <End Role="Corredor" EntitySet="Corredor" />
           </AssociationSet>
+          <EntitySet Name="Temporal" EntityType="FITModel.Temporal" />
         </EntityContainer>
         <EntityType Name="Usuarios">
           <Key>
@@ -147,6 +167,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Temporal">
+          <Key>
+            <PropertyRef Name="IdCorredor" />
+          </Key>
+          <Property Name="IdCorredor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Paterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Materno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Edad" Type="Int32" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Celular" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Sexo" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Talla" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="IdCarrera" Type="Int32" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Cookie" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -200,6 +238,25 @@
                 <ScalarProperty Name="Paterno" ColumnName="Paterno" />
                 <ScalarProperty Name="Nombres" ColumnName="Nombres" />
                 <ScalarProperty Name="Folio" ColumnName="Folio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Temporal">
+            <EntityTypeMapping TypeName="FITModel.Temporal">
+              <MappingFragment StoreEntitySet="Temporal">
+                <ScalarProperty Name="Cookie" ColumnName="Cookie" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="Talla" ColumnName="Talla" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Materno" ColumnName="Materno" />
+                <ScalarProperty Name="Paterno" ColumnName="Paterno" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="IdCorredor" ColumnName="IdCorredor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

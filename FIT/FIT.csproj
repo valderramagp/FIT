@@ -139,6 +139,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\back-black.jpg" />
+    <Content Include="Images\carrera_trans.png" />
     <Content Include="Images\pic04.png" />
     <Content Include="Models\FITDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -212,6 +213,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FITDB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Temporal.cs">
+      <DependentUpon>FITDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Usuarios.cs">
       <DependentUpon>FITDB.tt</DependentUpon>
     </Compile>
@@ -246,6 +250,7 @@
     <Content Include="Views\Inscripcion\Index.cshtml" />
     <Content Include="Views\Inscripcion\Confirmation.cshtml" />
     <Content Include="Views\Inscripcion\Error.cshtml" />
+    <Content Include="Views\Inscripcion\SuccessEmail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
