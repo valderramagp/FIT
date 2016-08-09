@@ -139,6 +139,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\back-black.jpg" />
+    <Content Include="Images\carrera_trans.png" />
     <Content Include="Images\pic04.png" />
     <Content Include="Models\FITDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
