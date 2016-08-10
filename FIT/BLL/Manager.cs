@@ -36,9 +36,8 @@ namespace FIT.BLL
         /// </summary>
         /// <param name="corredores"></param>
         /// <returns></returns>
-        public int CreateCorredores(List<Temporal> temporales)
+        public int CreateCorredores(List<Temporal> temporales, string code)
         {
-            var code = RandomString(10);
             foreach(var corredor in temporales)
             {
                 corredor.FechaRegistro = DateTime.Now;
@@ -48,9 +47,13 @@ namespace FIT.BLL
             return ctx.SaveChanges();
         }
 
-        private static Random random = new Random();
-        public static string RandomString(int length)
+       
+
+        
+
+        public string RandomString(int length)
         {
+            Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -84,6 +87,49 @@ namespace FIT.BLL
                 return corredores;
             }
             return null;
+        }
+
+        public List<Temporal> GetTemporales(string cookie)
+        {
+            return ctx.Temporal.Where(x => x.Cookie == cookie).ToList();
+        }
+
+        public List<Corredor> GetInscritos(string cookie)
+        {
+            return ctx.Corredor.Where(x => x.ConfirmacionPago == cookie).ToList();
+        }
+
+        public List<Corredor> CreateCorredores(string cookie)
+        {
+            var temporales = ctx.Temporal.Where(x => x.Cookie == cookie).ToList();
+            var corredores = new List<Corredor>();
+            foreach (var temporal in temporales)
+            {
+                Corredor corredor = new Corredor();
+                corredor.Nombres = temporal.Nombres;
+                corredor.Paterno = temporal.Paterno;
+                corredor.Materno = temporal.Materno;
+                corredor.Edad = temporal.Edad;
+                corredor.Telefono = temporal.Telefono;
+                corredor.Celular = temporal.Celular;
+                corredor.Correo = temporal.Correo;
+                corredor.Sexo = temporal.Sexo;
+                corredor.Talla = temporal.Talla;
+                corredor.IdCarrera = temporal.IdCarrera;
+                corredor.Status = true;
+                corredor.ConfirmacionPago = cookie;
+                corredores.Add(corredor);
+                ctx.Corredor.Add(corredor);
+            }
+            ctx.SaveChanges();
+            return corredores;
+        }
+
+        public void EliminarTemporales(string cookie)
+        {
+            var temporales = ctx.Temporal.Where(x => x.Cookie == cookie);
+            ctx.Temporal.RemoveRange(temporales);
+            ctx.SaveChanges();
         }
 
         public void SendMail(Corredor corredor, string body)

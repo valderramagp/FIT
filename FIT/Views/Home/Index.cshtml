@@ -4,13 +4,15 @@
     ViewBag.Title = "Index";
 }
 
+<link type="text/css" rel="stylesheet" href="~/Content/datatables.min.css" />
+
 <h2>¡BIENVENIDO!</h2>
  
 @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary pull-right" })
 
 <br />
 
-<table class="table table-striped table-hover table-responsive">
+<table class="table table-striped table-hover table-responsive" id="tblCorredores">
     <thead>
         <tr>
             <th>
@@ -43,9 +45,8 @@
             <th></th>
         </tr>
     </thead>
-
-@foreach (var item in Model) {
     <tbody>
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @item.Folio
@@ -80,11 +81,10 @@
                 <a class="btnEliminar" data-folio="@item.Folio">Eliminar</a>
             </td>
         </tr>
+    }
     </tbody>
-}
-
 </table>
-
+<script src="~/scripts/datatables.js"></script>
 <script>
     $(document).ready(function () {
         $(".btnEliminar").click(function () {
@@ -92,6 +92,12 @@
             if (confirm("¿Estás seguro de querer eliminar este corredor?")) {
                 window.location.href = "/Home/Delete/" + $id;
             }
+        });
+
+        $("#tblCorredores").DataTable({
+            "language": {
+                "url": "../scripts/DataTables-Spanish.json"
+            },
         });
     })
 </script>

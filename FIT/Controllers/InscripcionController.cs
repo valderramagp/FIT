@@ -19,14 +19,19 @@ namespace FIT.Controllers
             Response.Cookies["AcceptCookies"].Value = "ok";
             Response.Cookies["AcceptCookies"].Expires = DateTime.Now.AddDays(1);
 
-            var status = TestCookies("AcceptCookies");
+            var status = CookieExists("AcceptCookies");
             if (!status)
                 return RedirectToAction("Error", new { message = 4 });
             Response.Cookies["AcceptCookies"].Expires = DateTime.Now.AddDays(-1);
-            if(TestCookies("codigo"))
+            if(CookieExists("codigo"))
             {
                 Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
             } 
+            return View();
+        }
+
+        public ActionResult Offline()
+        {
             return View();
         }
 
@@ -40,11 +45,15 @@ namespace FIT.Controllers
         public JsonResult Inscribir(List<Temporal> corredor)
         {
             Manager m = new Manager();
-            m.CreateCorredores(corredor);
-            Response.Cookies["codigo"].Value = corredor[0].Cookie;
+            var code = m.RandomString(10);
+            Response.Cookies["codigo"].Value = code;
             Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(1);
-            var status = TestCookies("codigo");
-            return Json(status, JsonRequestBehavior.AllowGet);
+            m.CreateCorredores(corredor, code);
+
+            if (!CookieExists("codigo"))
+                return Json(false, JsonRequestBehavior.AllowGet);
+            else
+                return Json(code, JsonRequestBehavior.AllowGet);
         }
 
         public string RenderViewToString(object viewData)
@@ -68,7 +77,7 @@ namespace FIT.Controllers
             return View(corredor);
         }
 
-        private bool TestCookies(string cookie)
+        private bool CookieExists(string cookie)
         {
             return Request.Cookies[cookie] != null ? true : false;
         }
@@ -79,43 +88,47 @@ namespace FIT.Controllers
             return corredores == null ? false : true;
         }
 
-        public ActionResult Confirmation(string tx = "", string st = "")
+        [HttpPost]
+        public void Notification()
+        {
+            var cookie = Request["custom"];
+            Manager m = new Manager();
+            var inscritos = m.CreateCorredores(cookie);
+            foreach (var item in inscritos)
+            {
+                DatosCorreo data = new DatosCorreo();
+                data.NumCorredor = item.Folio;
+                data.Nombre = item.Nombres;
+                data.Paterno = item.Paterno;
+                data.Materno = item.Materno;
+                data.Edad = item.Edad;
+                data.Telefono = item.Telefono;
+                data.Celular = item.Celular;
+                data.Correo = item.Correo;
+                data.Sexo = item.Sexo;
+                data.Talla = item.Talla;
+                data.Carrera = m.GetCarreraById(item.IdCarrera).Descripcion;
+                data.ConfirmacionPago = item.ConfirmacionPago;
+                var body = RenderViewToString(data);
+                m.SendMail(item, body);
+            }
+        }
+
+        public ActionResult Confirmation(string st = "")
         {
             if (st == "Completed")
             {
                 Manager m = new Manager();
 
+                if (!CookieExists("codigo"))
+                    return RedirectToAction("message", new { message = 1 });
+
                 HttpCookie codigo = new HttpCookie("codigo");
                 codigo = Request.Cookies["codigo"];
                 
-                var totalInscritos = m.CreateCorredores(codigo.Value, tx);
-                if (totalInscritos.Count > 0)
-                {
-                    foreach(var item in totalInscritos)
-                    {
-                        DatosCorreo data = new DatosCorreo();
-                        data.NumCorredor = item.Folio;
-                        data.Nombre = item.Nombres;
-                        data.Paterno = item.Paterno;
-                        data.Materno = item.Materno;
-                        data.Edad = item.Edad;
-                        data.Telefono = item.Telefono;
-                        data.Celular = item.Celular;
-                        data.Correo = item.Correo;
-                        data.Sexo = item.Sexo;
-                        data.Talla = item.Talla;
-                        data.Carrera = m.GetCarreraById(item.IdCarrera).Descripcion;
-                        data.ConfirmacionPago = item.ConfirmacionPago;
-                        var body = RenderViewToString(data);
-                        m.SendMail(item, body);
-                    }
-
-                    ViewBag.TotalInscritos = totalInscritos.Count;
-                    ViewBag.Confirmation = tx;
-                    Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
-                    return View();
-                }
-                return RedirectToAction("Error", new { message = 2 });
+                ViewBag.Confirmation = codigo.Value;
+                Response.Cookies["codigo"].Expires = DateTime.Now.AddDays(-1);
+                return View();
             }
             return RedirectToAction("Error", new { message = 2 });
         }
